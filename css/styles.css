@@ -157,6 +157,9 @@ h1 {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 0.74rem 1.04rem;
@@ -250,7 +253,13 @@ h1 {
   border: 1px solid var(--line);
   background: rgba(255, 252, 245, 0.88);
   backdrop-filter: blur(10px);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   box-shadow: 0 10px 24px rgba(17, 32, 57, 0.09);
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tabs a {
@@ -498,6 +507,80 @@ footer {
 
   .grid.three {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero,
+  main,
+  footer,
+  .tabs {
+    width: calc(100% - 1rem);
+  }
+
+  .hero {
+    padding: 1.6rem 0 1.1rem;
+  }
+
+  .hero-shell {
+    padding: 0.8rem;
+    border-radius: var(--radius);
+  }
+
+  .hero-main,
+  .hero-panel {
+    padding: 1rem 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(1.85rem, 10vw, 2.5rem);
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-size: 0.98rem;
+  }
+
+  .hero-actions {
+    gap: 0.55rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .tabs {
+    top: 0.18rem;
+    border-radius: 16px;
+    padding: 0.35rem;
+  }
+
+  .tabs a {
+    font-size: 0.85rem;
+    min-height: 40px;
+    padding: 0.45rem 0.72rem;
+  }
+
+  .section {
+    padding: 1.3rem 0;
+    scroll-margin-top: 4.4rem;
+  }
+
+  .card {
+    padding: 0.88rem 0.86rem 0.92rem;
+  }
+
+  .timeline {
+    padding-left: 0;
+  }
+
+  .timeline::before,
+  .timeline-item::before {
+    display: none;
+  }
+
+  .timeline-item {
+    padding: 0.85rem;
   }
 }
 
