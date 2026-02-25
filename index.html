@@ -44,7 +44,7 @@
         <p class="panel-title">At A Glance</p>
         <ul class="metric-list">
           <li><span class="metric-value">10+</span><span class="metric-label">Years in engineering</span></li>
-          <li><span class="metric-value">4</span><span class="metric-label">Recent EPAM roles</span></li>
+          <li><span class="metric-value">9</span><span class="metric-label">Career Roles</span></li>
           <li><span class="metric-value">3</span><span class="metric-label">Side projects shipped/in progress</span></li>
         </ul>
       </aside>
@@ -198,58 +198,75 @@
         <h2>Shipped Side Projects</h2>
         <p class="section-note">A public-facing section for personal products that are already released and usable.</p>
       </div>
-      <div class="grid two project-grid">
-        <article class="card project-card reveal">
-          <p class="project-label project-label--released">Released</p>
-          <h3>Awaitee</h3>
-          <p>
-            Smart price tracker and discount alert tool that monitors products across virtually any e-commerce site,
-            performs automated checks, and notifies users when prices drop.
-          </p>
-          <p><strong>Highlights:</strong> Universal tracking, instant alerts, price history, privacy-first browser-only operation.</p>
-          <p><strong>Platform:</strong> Chrome Web Store</p>
-          <p>
-            <strong>Live:</strong>
-            <a class="project-link" href="https://chromewebstore.google.com/detail/awaitee/dbeebojckkiogijajhggnghbcolalhcl" target="_blank" rel="noreferrer">
-              chromewebstore.google.com/detail/awaitee
-            </a>
-          </p>
-        </article>
-        <article class="card project-card reveal" data-delay="1">
-          <p class="project-label project-label--progress">In Progress</p>
-          <h3>TInterviewer</h3>
-          <p>
-            Interview preparation platform idea focused on personalized Q&A spaces, designed to be generated and maintained with AI-driven workflows.
-          </p>
-          <p>
-            Built around Jira + GitHub Copilot with 4.5 agentic assistants (BA Assistant, Developer Assistant, Topic Splitter, Content Generator, plus manual answer trigger) to automate ticket breakdown, content generation, and PR creation.
-          </p>
-          <p><strong>Flow:</strong> Jira ticket -> automation -> GitHub workflow -> Copilot CLI/Models API -> tasks/content/PR -> Jira feedback loop.</p>
-          <p><strong>Stack:</strong> Jira, GitHub Copilot, GitHub Actions, Copilot CLI</p>
-          <p>
-            <strong>Preview:</strong>
-            <a class="project-link" href="https://ayerma.github.io/TInterviewer/#/spaces/java" target="_blank" rel="noreferrer">
-              ayerma.github.io/TInterviewer/#/spaces/java
-            </a>
-          </p>
-        </article>
-        <article class="card project-card reveal" data-delay="2">
-          <p class="project-label project-label--released">Released</p>
-          <h3>Local Nano Chat</h3>
-          <p>
-            Chrome extension for chatting with local model about the content of the open page. It runs on Chrome's
-            built-in on-device AI APIs (without an external backend), can extract page context and YouTube
-            transcripts, answer questions about the material, and generate short summaries.
-          </p>
-          <p><strong>Focus:</strong> Data stays local on the user's device.</p>
-          <p><strong>Platform:</strong> Chrome Web Store</p>
-          <p>
-            <strong>Live:</strong>
-            <a class="project-link" href="https://chromewebstore.google.com/detail/local-nano-chat/baoklfpfbfegplghabfbpcmipmiiihmc?utm_source=item-share-cb" target="_blank" rel="noreferrer">
-              chromewebstore.google.com/detail/local-nano-chat
-            </a>
-          </p>
-        </article>
+      <div class="project-carousel" data-project-carousel>
+        <div class="project-carousel-toolbar" role="group" aria-label="Side project carousel controls">
+          <p class="project-carousel-status" data-carousel-status>1 / 3</p>
+          <div class="project-carousel-buttons">
+            <button class="project-carousel-btn" type="button" data-carousel-prev aria-label="Previous side project">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <button class="project-carousel-btn" type="button" data-carousel-next aria-label="Next side project">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="project-carousel-track" data-carousel-track tabindex="0" aria-label="Side projects">
+          <article class="card project-card reveal" data-carousel-slide>
+            <p class="project-label project-label--released">Released</p>
+            <h3>Awaitee</h3>
+            <p>
+              Smart price tracker and discount alert tool that monitors products across virtually any e-commerce site,
+              performs automated checks, and notifies users when prices drop.
+            </p>
+            <p><strong>Highlights:</strong> Universal tracking, instant alerts, price history, privacy-first browser-only operation.</p>
+            <p><strong>Platform:</strong> Chrome Web Store</p>
+            <p>
+              <strong>Live:</strong>
+              <a class="project-link" href="https://chromewebstore.google.com/detail/awaitee/dbeebojckkiogijajhggnghbcolalhcl" target="_blank" rel="noreferrer">
+                chromewebstore.google.com/detail/awaitee
+              </a>
+            </p>
+          </article>
+
+          <article class="card project-card reveal" data-delay="1" data-carousel-slide>
+            <p class="project-label project-label--released">Released</p>
+            <h3>Local Nano Chat</h3>
+            <p>
+              Chrome extension for chatting with local model about the content of the open page. It runs on Chrome's
+              built-in on-device AI APIs (without an external backend), can extract page context and YouTube
+              transcripts, answer questions about the material, and generate short summaries.
+            </p>
+            <p><strong>Focus:</strong> Data stays local on the user's device.</p>
+            <p><strong>Platform:</strong> Chrome Web Store</p>
+            <p>
+              <strong>Live:</strong>
+              <a class="project-link" href="https://chromewebstore.google.com/detail/local-nano-chat/baoklfpfbfegplghabfbpcmipmiiihmc?utm_source=item-share-cb" target="_blank" rel="noreferrer">
+                chromewebstore.google.com/detail/local-nano-chat
+              </a>
+            </p>
+          </article>
+
+          <article class="card project-card reveal" data-delay="2" data-carousel-slide>
+            <p class="project-label project-label--progress">In Progress</p>
+            <h3>TInterviewer</h3>
+            <p>
+              Interview preparation platform idea focused on personalized Q&A spaces, designed to be generated and maintained with AI-driven workflows.
+            </p>
+            <p>
+              Built around Jira + GitHub Copilot with 4.5 agentic assistants (BA Assistant, Developer Assistant, Topic Splitter, Content Generator, plus manual answer trigger) to automate ticket breakdown, content generation, and PR creation.
+            </p>
+            <p><strong>Flow:</strong> Jira ticket -> automation -> GitHub workflow -> Copilot CLI/Models API -> tasks/content/PR -> Jira feedback loop.</p>
+            <p><strong>Stack:</strong> Jira, GitHub Copilot, GitHub Actions, Copilot CLI</p>
+            <p>
+              <strong>Preview:</strong>
+              <a class="project-link" href="https://ayerma.github.io/TInterviewer/#/spaces/java" target="_blank" rel="noreferrer">
+                ayerma.github.io/TInterviewer/#/spaces/java
+              </a>
+            </p>
+          </article>
+        </div>
+
       </div>
     </section>
 

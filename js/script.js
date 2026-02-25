@@ -173,6 +173,57 @@ if ("IntersectionObserver" in window) {
   sectionById.forEach((section) => observer.observe(section));
 }
 
+function initExperienceTimelineCompaction() {
+  const experienceSection = document.getElementById("experience");
+  const timeline = experienceSection?.querySelector(".timeline");
+  if (!timeline) return;
+
+  const items = Array.from(timeline.querySelectorAll(".timeline-item"));
+  const visibleCount = 5;
+  if (items.length <= visibleCount) return;
+
+  const extraItems = items.slice(visibleCount);
+  const totalCount = items.length;
+  let expanded = false;
+
+  const controls = document.createElement("div");
+  controls.className = "experience-controls";
+
+  const meta = document.createElement("p");
+  meta.className = "experience-controls-meta";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn btn-ghost experience-toggle-btn";
+  button.setAttribute("aria-expanded", "false");
+
+  function setExpanded(nextExpanded) {
+    expanded = nextExpanded;
+    timeline.classList.toggle("timeline--compact", !expanded);
+    extraItems.forEach((item) => {
+      item.hidden = !expanded;
+    });
+
+    meta.textContent = expanded
+      ? `Showing all ${totalCount} roles`
+      : `Showing latest ${visibleCount} of ${totalCount} roles`;
+    button.textContent = expanded
+      ? "Show fewer roles"
+      : `Show ${extraItems.length} earlier role${extraItems.length > 1 ? "s" : ""}`;
+    button.setAttribute("aria-expanded", String(expanded));
+  }
+
+  button.addEventListener("click", () => {
+    setExpanded(!expanded);
+  });
+
+  controls.append(meta, button);
+  timeline.insertAdjacentElement("afterend", controls);
+  setExpanded(false);
+}
+
+initExperienceTimelineCompaction();
+
 const revealItems = Array.from(document.querySelectorAll(".reveal"));
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -378,3 +429,155 @@ function generateCvPdf(data) {
 
   doc.save("Aliaksei-Yermachonak-CV.pdf");
 }
+
+function initProjectCarousels() {
+  const carousels = Array.from(document.querySelectorAll("[data-project-carousel]"));
+
+  carousels.forEach((carousel) => {
+    const track = carousel.querySelector("[data-carousel-track]");
+    const prevButton = carousel.querySelector("[data-carousel-prev]");
+    const nextButton = carousel.querySelector("[data-carousel-next]");
+    const dotsContainer = carousel.querySelector("[data-carousel-dots]");
+    const status = carousel.querySelector("[data-carousel-status]");
+
+    if (!track || !prevButton || !nextButton) return;
+
+    const slides = Array.from(track.querySelectorAll("[data-carousel-slide]"));
+    if (slides.length === 0) return;
+
+    let currentIndex = 0;
+    let rafId = 0;
+
+    const dotButtons = slides.map((slide, index) => {
+      if (!dotsContainer) return null;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "project-carousel-dot";
+      button.setAttribute("aria-label", `Go to project ${index + 1}`);
+      button.addEventListener("click", () => scrollToIndex(index));
+      dotsContainer.appendChild(button);
+      return button;
+    });
+
+    function getClosestIndex() {
+      const left = track.scrollLeft;
+      let bestIndex = 0;
+      let bestDistance = Number.POSITIVE_INFINITY;
+
+      slides.forEach((slide, index) => {
+        const distance = Math.abs(slide.offsetLeft - left);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestIndex = index;
+        }
+      });
+
+      return bestIndex;
+    }
+
+    function getVisibleSlots() {
+      const computedStyles = window.getComputedStyle(track);
+      const gap = Number.parseFloat(computedStyles.columnGap || computedStyles.gap || "0") || 0;
+      const slideWidth = slides[0]?.offsetWidth || track.clientWidth;
+      return Math.max(
+        1,
+        Math.min(
+          slides.length,
+          Math.floor((track.clientWidth + gap + 1) / Math.max(1, slideWidth + gap))
+        )
+      );
+    }
+
+    function getMaxStartIndex(visibleSlots) {
+      return Math.max(0, slides.length - visibleSlots);
+    }
+
+    function updateUi() {
+      const visibleSlots = getVisibleSlots();
+      const hasOverflow = slides.length > visibleSlots;
+      const maxStartIndex = getMaxStartIndex(visibleSlots);
+      currentIndex = Math.min(getClosestIndex(), maxStartIndex);
+
+      carousel.classList.toggle("project-carousel--static", !hasOverflow);
+      track.tabIndex = hasOverflow ? 0 : -1;
+
+      prevButton.disabled = !hasOverflow || currentIndex <= 0;
+      nextButton.disabled = !hasOverflow || currentIndex >= maxStartIndex;
+
+      if (status) {
+        const firstVisible = currentIndex;
+        const lastVisible = Math.min(slides.length - 1, currentIndex + visibleSlots - 1);
+        status.textContent =
+          firstVisible === lastVisible
+            ? `${firstVisible + 1} / ${slides.length}`
+            : `${firstVisible + 1}-${lastVisible + 1} / ${slides.length}`;
+      }
+
+      dotButtons.forEach((button, index) => {
+        if (!button) return;
+        const isActive = index === currentIndex;
+        button.classList.toggle("is-active", isActive);
+        if (isActive) {
+          button.setAttribute("aria-current", "true");
+          button.setAttribute("aria-label", `Project ${index + 1} (current)`);
+        } else {
+          button.removeAttribute("aria-current");
+          button.setAttribute("aria-label", `Go to project ${index + 1}`);
+        }
+      });
+    }
+
+    function scrollToIndex(index) {
+      const visibleSlots = getVisibleSlots();
+      const maxStartIndex = getMaxStartIndex(visibleSlots);
+      const clampedIndex = Math.max(0, Math.min(index, maxStartIndex));
+      const target = slides[clampedIndex];
+      if (!target) return;
+
+      currentIndex = clampedIndex;
+      track.scrollTo({
+        left: target.offsetLeft,
+        behavior: reduceMotionQuery.matches ? "auto" : "smooth"
+      });
+      window.requestAnimationFrame(updateUi);
+    }
+
+    function scrollByStep(step) {
+      const hasOverflow = slides.length > getVisibleSlots();
+      if (!hasOverflow) return;
+      scrollToIndex(currentIndex + step);
+    }
+
+    prevButton.addEventListener("click", () => scrollByStep(-1));
+    nextButton.addEventListener("click", () => scrollByStep(1));
+
+    track.addEventListener(
+      "scroll",
+      () => {
+        if (rafId) return;
+        rafId = window.requestAnimationFrame(() => {
+          rafId = 0;
+          updateUi();
+        });
+      },
+      { passive: true }
+    );
+
+    track.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        scrollByStep(-1);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        scrollByStep(1);
+      }
+    });
+
+    window.addEventListener("resize", updateUi);
+    updateUi();
+  });
+}
+
+initProjectCarousels();
